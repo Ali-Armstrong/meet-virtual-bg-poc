@@ -1,5 +1,6 @@
 'use strict';
 const webcamElement = document.getElementById('localVideo');
+const modVideo = document.getElementById('modVideo');
 const canvasPerson = document.getElementById("canvasPerson");
 const multiplier = 0.75;
 const outputStride = 16;
@@ -10,10 +11,12 @@ const backgroundImagesPath = 'images/';
 //const snapSound = new Audio('/wp-content/uploads/2019/10/snap.wav');
 
 const contextPerson = canvasPerson.getContext("2d");
+
 let net;
 let cameraFrame;
 let currentBGIndex = 0;
 let screenMode;
+let aStream;
 
 var isChannelReady = false;
 var isInitiator = false;
@@ -118,6 +121,9 @@ navigator.getUserMedia({
   video: true
 },function(stream){
   gotStream(stream)
+  let modStream = canvasPerson.captureStream();
+  //let mixedStream = new MediaStream([modStream.getVideoTracks()[0], aStream.getAudioTracks()[0]])
+  modVideo.srcObject = modStream
 },function(err){
   alert('getUserMedia() error: ' + e.name);
 })
@@ -127,7 +133,10 @@ function gotStream(stream) {
   contextPerson.clearRect(0, 0, canvasPerson.width, canvasPerson.height);
   localStream = stream;
   localVideo.srcObject = stream;
-  //audioStream = new MediaStream(stream.getAudioTracks());
+  var audioCtx = new AudioContext();
+  // create a stream from our AudioContext
+  var dest = audioCtx.createMediaStreamDestination();
+  aStream = dest.stream;
   bodyPix.load({
     architecture: 'MobileNetV1',
     outputStride: outputStride,
@@ -160,7 +169,7 @@ function detectBody() {
   .then(personSegmentation => {
     if (personSegmentation != null) {
       drawBody(personSegmentation);
-      detectBody()
+      requestAnimationFrame(detectBody)
     }
   });
 }
