@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <title>Realtime communication with WebRTC</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/body-pix@2.0"></script>
+  <script type="text/javascript" src="https://unpkg.com/webcam-easy/dist/webcam-easy.min.js"></script>
+  <link rel="stylesheet" href="/css/main.css" />
+
+</head>
+
+<body>
+
+  <h1>Realtime communication with WebRTC</h1>
+
+  <div id="videos">
+    <div id="webcam-container" class="webcam-container d-none">
+      <video id="localVideo" autoplay muted playsinline width="640" height="480"></video>
+      <div id="selfie-container">
+          <div id="background-container">
+              <div class="spinner-border d-none" role="status">
+                  <span class="sr-only">Loading...</span>
+              </div>
+          </div>
+          <canvas id="canvasPerson" width="640" height="480"></canvas>
+      </div>
+      <div class="flash"></div>
+    </div>
+    <video id="modVideo" autoplay playsinline width="640" height="480"></video>
+    <video id="remoteVideo" autoplay playsinline width="640" height="480"></video>
+  </div>
+
+  <!-- This file is automatically added/served when running "node index.js". -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+
+</html>
